@@ -1,4 +1,10 @@
+console.log("🔍 MONGODB_URI:", process.env.MONGO_URI);
+console.log(
+  "🔍 All env vars:",
+  Object.keys(process.env).filter((k) => k.includes("MONGO"))
+);
 const mongoose = require("mongoose");
+
 require("dotenv").config();
 
 const MongoConnect = async () => {
