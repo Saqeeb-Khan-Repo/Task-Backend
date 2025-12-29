@@ -22,14 +22,14 @@ MongoConnect();
 
 //routes
 app.get("/", (req, res) => {
-  res.json({ message: "your Welcome" });
+  res.json({ message: "Your backend is live " });
 });
 app.post("/create", PostReq);
 app.get("/tasks", GetTasks);
 app.put("/tasks/:id/toggle", ToggleComplete);
 app.get("/tasks/completed", GetCompletedTasks);
 app.delete("/tasks/:id", CompletedDelete);
-app.delete("/delete/:id",DeleteTask)
+app.delete("/delete/:id", DeleteTask);
 
 app.listen(PORT, () => {
   console.log(`Backend is live At ${PORT}`);
