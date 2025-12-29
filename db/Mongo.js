@@ -5,11 +5,9 @@ console.log(
   "🔍 MONGO vars:",
   Object.keys(process.env).filter((k) => k.includes("MONGO"))
 );
-
 require("dotenv").config(); // Fallback (won't work in Railway)
 
 const mongoose = require("mongoose");
-
 const MongoConnect = async () => {
   try {
     const uri = process.env.MONGO_URL;
