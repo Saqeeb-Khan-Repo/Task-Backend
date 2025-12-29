@@ -1,31 +1,33 @@
-// /app/db/Mongo.js - FIXED
-require("dotenv").config(); // ✅ FIRST LINE
-
+// /app/db/Mongo.js - MAX DEBUG
+console.log("🔥 ALL ENV VARS:", Object.keys(process.env));
+console.log("🔍 MONGO_URL:", process.env.MONGO_URL);
 console.log(
-  "🔍 MONGO_URL:",
-  process.env.MONGO_URL
-    ? "✅ SET (" + process.env.MONGO_URL.substring(0, 30) + "...)"
-    : "❌ UNDEFINED"
-);
-console.log(
-  "🔍 All MONGO vars:",
+  "🔍 MONGO vars:",
   Object.keys(process.env).filter((k) => k.includes("MONGO"))
 );
+
+require("dotenv").config(); // Fallback (won't work in Railway)
 
 const mongoose = require("mongoose");
 
 const MongoConnect = async () => {
   try {
-    // ✅ Validate URI exists
-    if (!process.env.MONGO_URL) {
-      throw new Error("❌ MONGO_URL environment variable is missing");
+    const uri = process.env.MONGO_URL;
+    console.log(
+      "🔗 Using URI:",
+      uri ? uri.substring(0, 40) + "..." : "❌ NULL"
+    );
+
+    if (!uri) {
+      throw new Error("🚨 MONGO_URL environment variable MISSING in Railway");
     }
 
-    await mongoose.connect(process.env.MONGO_URL);
+    await mongoose.connect(uri);
     console.log("✅ MongoDB Connected Successfully");
   } catch (error) {
-    console.error("❌ MongoDB Connection Failed:", error.message);
-    process.exit(1); // ✅ Stop container on failure
+    console.error("💥 MongoDB FAILED:", error.message);
+    console.error("💥 Full error:", error);
+    process.exit(1);
   }
 };
 
