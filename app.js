@@ -1,6 +1,6 @@
 const express = require("express");
 require("dotenv").config();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080; // Match your container port
 const app = express();
 const MongoConnect = require("./db/Mongo");
 const {
@@ -13,24 +13,34 @@ const {
 } = require("./controllers/controller");
 const cors = require("cors");
 
-// middleware to parse JSON
-app.use(express.json()); // important for req.body [web:83][web:89]
+// Middleware
+app.use(express.json());
 app.use(cors());
 
-// db
-MongoConnect();
-
-//routes
+// Routes
 app.get("/", (req, res) => {
-  res.json({ message: "Your backend is live " });
+  res.json({ message: "Your backend is live" });
 });
+
+// ✅ FIXED ROUTES
 app.post("/create", PostReq);
 app.get("/tasks", GetTasks);
 app.put("/tasks/:id/toggle", ToggleComplete);
 app.get("/tasks/completed", GetCompletedTasks);
-app.delete("/tasks/:id", CompletedDelete);
-app.delete("/delete/:id", DeleteTask);
+app.delete("/tasks/:id", DeleteTask); // General delete
+app.delete("/tasks/completed/:id", CompletedDelete); // Completed delete
 
-app.listen(PORT, () => {
-  console.log(`Backend is live At ${PORT}`);
-});
+// ✅ WAIT FOR DB BEFORE STARTING SERVER
+const startServer = async () => {
+  try {
+    await MongoConnect();
+    app.listen(PORT, () => {
+      console.log(`✅ Backend is live At ${PORT} | MongoDB Connected`);
+    });
+  } catch (error) {
+    console.error("❌ Failed to start server:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
