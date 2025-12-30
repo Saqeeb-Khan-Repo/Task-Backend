@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const uri =
   process.env.NODE_ENV === "production"
     ? process.env.MONGO_URL // Atlas on Render
-    : "mongodb://127.0.0.1:27017/Task-Manager"; // local dev
+    : "mongodb+srv://khansaqeeb332_db_user:KrGPyEDLGxJBySSs@cluster1.xnkbbvy.mongodb.net/"; // local dev
 
 const MongoConnect = async () => {
   try {
