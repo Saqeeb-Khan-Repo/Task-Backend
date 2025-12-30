@@ -1,31 +1,20 @@
-// /app/db/Mongo.js - MAX DEBUG
-console.log("🔥 ALL ENV VARS:", Object.keys(process.env));
-console.log("🔍 MONGO_URL:", process.env.MONGO_URL);
-console.log(
-  "🔍 MONGO vars:",
-  Object.keys(process.env).filter((k) => k.includes("MONGO"))
-);
-require("dotenv").config(); // Fallback (won't work in Railway)
-
 const mongoose = require("mongoose");
+
+const uri =
+  process.env.NODE_ENV === "production"
+    ? process.env.MONGO_URL // Atlas on Render
+    : "mongodb://127.0.0.1:27017/Task-Manager"; // local dev
+
 const MongoConnect = async () => {
   try {
-    const uri = process.env.MONGO_URL;
-    console.log(
-      "🔗 Using URI:",
-      uri ? uri.substring(0, 40) + "..." : "❌ NULL"
-    );
-
     if (!uri) {
-      throw new Error("🚨 MONGO_URL environment variable MISSING in Railway");
+      throw new Error("MONGO_URL is not defined");
     }
-
     await mongoose.connect(uri);
-    console.log("✅ MongoDB Connected Successfully");
-  } catch (error) {
-    console.error("💥 MongoDB FAILED:", error.message);
-    console.error("💥 Full error:", error);
-    process.exit(1);
+    console.log("MongoDB connected");
+  } catch (err) {
+    console.error("MongoDB FAILED:", err);
+    throw err;
   }
 };
 
